@@ -104,7 +104,7 @@ def _main(config):
     os.makedirs(config.OUTPUT_DIR, exist_ok=True)
     if os.path.isfile(meta_file_path):
         df = pd.read_csv(meta_file_path, names=["url", "uuid"])
-        _ = [check_if_visited_and_add(u) for u in df.url]
+        _ = [config.visited.check_if_visited_and_add(u) for u in df.url]
     else:
         df = pd.DataFrame(data={}, columns=["url", "uuid"])
         df.to_csv(meta_file_path, index=False, header=False, mode="a")
