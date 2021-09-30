@@ -20,35 +20,33 @@ def delay_mean_and_std(mean: int = 5, std: int = 3):
     if not delay_mean_and_std.init:
         np.random.seed(delay_mean_and_std.seed)
         delay_mean_and_std.init = True
-    time.sleep(np.random.normal(loc=mean, scale=std) / 1.0)
+    time.sleep(np.abs(np.random.normal(loc=mean, scale=std) / 1.0))
 
 
 delay_mean_and_std.seed = 123456
 delay_mean_and_std.init = False
 
+class VisitedUrls(object):
 
-def check_if_visited_and_add(url: str = None):
-    try:
-        if not check_if_visited_and_add.init:
-            check_if_visited_and_add.urls = {}
-            check_if_visited_and_add.init = True
-        url_parts = url.split("/")
-        urls = check_if_visited_and_add.urls
-        for p in url_parts:
-            if p in urls.keys():
-                urls = urls[p]
-            elif p == url_parts[-1]:
-                urls[p] = True
-                return False
-            else:
-                urls[p] = {}
-                urls = urls[p]
-        return True
-    except:
-        return False
+    def __init__(self):
+        self.urls = {}
 
-
-check_if_visited_and_add.init = False
+    def check_if_visited_and_add(self, url: str = None):
+        try:
+            url_parts = url.split("/")
+            urls = self.urls
+            for p in url_parts:
+                if p in urls.keys():
+                    urls = urls[p]
+                elif p == url_parts[-1]:
+                    urls[p] = True
+                    return False
+                else:
+                    urls[p] = {}
+                    urls = urls[p]
+            return True
+        except:
+            return False
 
 
 logger = logging.getLogger(__file__)
@@ -57,13 +55,13 @@ logger.setLevel(logging.INFO)
 
 def _download(config, url) -> Tuple[str, bytes]:
     try:
-        if check_if_visited_and_add(url):
+        if config.visited.check_if_visited_and_add(url):
             logger.warn("url : {} is already visited.".format(url))
             return None
         r = requests.get(url, allow_redirects=True)
         delay_mean_and_std(config.DELAY_MEAN, config.DELAY_STD)
         return r.headers["content-type"], r.content
-    except:
+    except Exception as e:
         logger.error("download error : {}".format(url))
         return None
 
@@ -78,7 +76,7 @@ def _save_image(config, url, content):
             logger.info("Saving {} as {}".format(url, unq_id))
             df = pd.DataFrame(data={"url": [url], "uuid": [unq_id]}, columns=["url", "uuid"])
             df.to_csv(config.OUTPUT_DIR + "/" + config.META_FILE, index=False, header=False, mode="a")
-    except:
+    except Exception as e:
         logger.error("error with url : {}".format(url))
 
 
@@ -101,6 +99,7 @@ def visit_page(config, page_url, cur_level=1):
 
 
 def _main(config):
+    config.visited = VisitedUrls()
     meta_file_path = os.path.join(config.OUTPUT_DIR, config.META_FILE)
     os.makedirs(config.OUTPUT_DIR, exist_ok=True)
     if os.path.isfile(meta_file_path):
@@ -152,8 +151,8 @@ def main(
     config.PAGE_END = pg_end
     config.IMAGE_TYPES = image_types
     config.MAX_LEVEL = max_level
-    config.output_dir = output_dir
-    config.meta_file = meta_file
+    config.OUTPUT_DIR = output_dir
+    config.META_FILE = meta_file
     config.get_urls = get_urls
     _main(config=config)
 
