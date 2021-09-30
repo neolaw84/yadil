@@ -1,0 +1,10 @@
+pytest 
+numpy 
+scipy 
+pandas 
+ipykernel 
+jupyter 
+pillow
+fire
+easydict
+bs4
