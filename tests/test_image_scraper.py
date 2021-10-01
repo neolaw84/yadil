@@ -11,8 +11,8 @@ from tempfile import TemporaryDirectory
 from http.server import ThreadingHTTPServer, SimpleHTTPRequestHandler
 from unittest import TestCase
 
-from yadil.web.image_scraper import _main, main
-from yadil.web.image_scraper_config import default_config
+from yadil.web.scraper import _main, main
+from yadil.web.scraper_config import default_config
 
 
 def _start_server(server: ThreadingHTTPServer):
@@ -61,18 +61,3 @@ class TestSampleSiteLegacy(TestCase):
             main(output_dir=output_dir, meta_file="meta_2.csv")
             files =glob.glob(output_dir + "/*")
             assert len(files) == 10
-
-"""
-class TestSampleSite(TestCase):
-    def setUp(self) -> None:
-        t.start()
-        super().setUp()
-
-    def tearDown(self) -> None:
-        server.shutdown()
-        t.join()
-        # self.p.join()
-        super().tearDown()
-
-    
-"""

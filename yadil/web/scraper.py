@@ -13,7 +13,7 @@ import requests
 import pandas as pd
 from bs4 import BeautifulSoup
 
-from yadil.web.image_scraper_config import default_config as config
+from yadil.web.scraper_config import default_config as config
 
 
 def delay_mean_and_std(mean: int = 5, std: int = 3):
