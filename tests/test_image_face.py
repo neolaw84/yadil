@@ -10,12 +10,12 @@ from tests import pytest_happy
 
 from yadil.image.face import extract, extract_pitch_yaw_roll
 
-THIS_FILE_PATH=pathlib.Path(__file__)
-THIS_DIR_PATH=THIS_FILE_PATH.parent
-IMAGE_DIR_PATH=pathlib.Path.joinpath(THIS_DIR_PATH, "images-with-faces")
+THIS_FILE_PATH = pathlib.Path(__file__)
+THIS_DIR_PATH = THIS_FILE_PATH.parent
+IMAGE_DIR_PATH = pathlib.Path.joinpath(THIS_DIR_PATH, "images-with-faces")
+
 
 class TestUtils(TestCase):
-
     def setUp(self) -> None:
         IMG_1_PATH = pathlib.Path.joinpath(IMAGE_DIR_PATH, "pexels-photo-3866555.png")
         IMG_2_PATH = pathlib.Path.joinpath(IMAGE_DIR_PATH, "photo-1601412436009-d964bd02edbc.png")
@@ -34,7 +34,7 @@ class TestUtils(TestCase):
             for i, rimg in enumerate(rimgs):
                 self.assertTupleEqual(rimg.shape, (256, 256, 3))
                 cv2.imwrite(str(IMAGE_DIR_PATH) + "/result-" + str(ip.name) + str(i) + ".jpg", rimg)
-                
+
     def test_extract_rotate(self):
         for ip in self.images:
             img = cv2.imread(str(ip))

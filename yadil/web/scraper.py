@@ -26,8 +26,8 @@ def delay_mean_and_std(mean: int = 5, std: int = 3):
 delay_mean_and_std.seed = 123456
 delay_mean_and_std.init = False
 
-class VisitedUrls(object):
 
+class VisitedUrls(object):
     def __init__(self):
         self.urls = {}
 
@@ -122,25 +122,8 @@ def main(
     max_level=3,
     output_dir="~/outputs/",
     meta_file="meta.csv",
-    get_urls:Union[str, Callable]=config.get_urls
+    get_urls: Union[str, Callable] = config.get_urls,
 ):
-    """download image files from a series of web-pages into output_dir.
-
-    Note: press 'q' to quit from `less`-like or `vim`-like environment.
-
-    Args:
-        url_prefix (str, optional): Prefix of the urls to get series of web-pages. You need to include `{page-id}` 
-        placeholder to have page from `pg_start` to `pg_end` to progress. Defaults to "http://localhost:8080/page-{page_id}".
-        pg_start (int, optional): Starting page to be placed in `{page-id}` placeholder. Defaults to 1.
-        pg_end (int, optional): Ending page to be placed in `{page-id}` placeholder. Defaults to 2.
-        image_types (List, optional): A list of meme-types to download. Defaults to ["image/jpeg", "image/png", "image/jpg"].
-        max_level (int, optional): The depth of pages to download from the url_prefix. Defaults to 3.
-        output_dir (str, optional): Where to output. It will create if it does not exist. Defaults to "~/outputs/".
-        meta_file (str, optional): Where to output the url to uuid filename pairs (csv). Defaults to "meta.csv".
-        get_urls ([type], optional): Optional python function to `get_urls(soup: BeautifulSoup, url="")` function. 
-        Defaults to `yadil.web.image_scraper_config.default_config.get_urls`.
-    """
-
     if isinstance(get_urls, str):
         get_url_module = get_urls
         path, obj = get_url_module.rsplit(".", 1)

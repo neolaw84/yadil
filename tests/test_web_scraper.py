@@ -10,6 +10,7 @@ from tests import pytest_happy
 from yadil.web.scraper import _main, main
 from yadil.web.scraper_config import default_config
 
+
 def _start_server(server: ThreadingHTTPServer):
     server.serve_forever(poll_interval=1)
 
@@ -29,19 +30,18 @@ t = threading.Thread(target=server.serve_forever, args=(1,))
 
 
 class TestSampleSiteLegacy(TestCase):
-
     @classmethod
     def setUpClass(cls) -> None:
         t.start()
         super().setUpClass()
-        
+
     @classmethod
     def tearDownClass(cls) -> None:
         server.shutdown()
         t.join()
         # self.p.join()
         return super().tearDownClass()
-    
+
     def test_legacy(self) -> None:
         with TemporaryDirectory() as output_dir:
             default_config.OUTPUT_DIR = output_dir
@@ -54,5 +54,5 @@ class TestSampleSiteLegacy(TestCase):
     def test_main(self) -> None:
         with TemporaryDirectory() as output_dir:
             main(output_dir=output_dir, meta_file="meta_2.csv")
-            files =glob.glob(output_dir + "/*")
+            files = glob.glob(output_dir + "/*")
             assert len(files) == 10
