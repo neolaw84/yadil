@@ -11,6 +11,7 @@ def merge_meta_files(input_meta_glob: Union[List, str]) -> pd.DataFrame:
     def read_df(meta_fp):
         df = pd.read_csv(meta_fp, names=["url", "uuid"])
         df = df[(df.url != "url")]
+        return df
 
     input_meta_globs = [input_meta_glob] if isinstance(input_meta_glob, str) else input_meta_glob
     dfs = [read_df(meta_fp) for img in input_meta_globs for meta_fp in glob.glob(img)]
