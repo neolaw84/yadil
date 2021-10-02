@@ -8,3 +8,10 @@ pillow
 fire
 easydict
 bs4
+wheel
+imageio
+cython
+insightface>=0.3
+mxnet
+onnxruntime
+opencv-python

@@ -1,5 +1,23 @@
 # yadil - Yet Another Document and Image Library
 
+## image
+
+### face
+
+Via CLI:
+
+```bash
+pip install yadil
+python -m yadil.image.face extract-all --help
+```
+
+Via python:
+
+```python
+from yadil.image.face import extract
+results, gender_ages, det_scores = extract(img, bbox_scale=1.2, correct_rotate=True, return_all=True)
+```
+
 ## web
 
 ### image_scraper
@@ -8,46 +26,7 @@ Via CLI:
 
 ```bash
 pip install yadil
-python -m yadil.web.image_scraper --help
-NAME
-    image_scraper.py - download image files from a series of web-pages into output_dir.
-
-SYNOPSIS
-    image_scraper.py <flags>
-
-DESCRIPTION
-    Note: press 'q' to quit from `less`-like or `vim`-like environment.
-
-FLAGS
-    --url_prefix=URL_PREFIX
-        Type: str
-        Default: 'http://local...
-        Prefix of the urls to get series of web-pages. You need to include `{page-id}`
-    --pg_start=PG_START
-        Type: int
-        Default: 1
-        Starting page to be placed in `{page-id}` placeholder. Defaults to 1.
-    --pg_end=PG_END
-        Type: int
-        Default: 2
-        Ending page to be placed in `{page-id}` placeholder. Defaults to 2.
-    --image_types=IMAGE_TYPES
-        Type: typing.List
-        Default: ['image/jpe...
-        A list of meme-types to download. Defaults to ["image/jpeg", "image/png", "image/jpg"].
-    --max_level=MAX_LEVEL
-        Default: 3
-        The depth of pages to download from the url_prefix. Defaults to 3.
-    --output_dir=OUTPUT_DIR
-        Default: '~/outputs/'
-        Where to output. It will create if it does not exist. Defaults to "~/outputs/".
-    --meta_file=META_FILE
-        Default: 'meta.csv'
-        Where to output the url to uuid filename pairs (csv). Defaults to "meta.csv".
-    --get_urls=GET_URLS
-        Type: typing.Union[str, typin...
-        Default: <function get_...
-        Optional python function to `get_urls(soup: BeautifulSoup, url="")` function. Defaults to `yadil.web.image_scraper_config.default_config.get_urls`.
+python -m yadil.web scrape --help
 ```
 
 Via python: 
@@ -65,3 +44,71 @@ is_main(
     meta_file="meta.csv",
 )
 ```
+
+### merge_meta_files
+
+Via CLI:
+
+```bash
+pip install yadil
+python -m yadil.web merge_meta_files --help
+```
+
+Via python:
+
+```python
+from yadil.web.utils import merge_meta_files
+df = merge_meta_files(input_meta_glob="*.csv")
+```
+
+    
+
+### create_meta_file_from_glob
+
+Via CLI:
+
+```bash
+pip install yadil
+python -m yadil.web create_meta_file_from_glob --help
+```
+
+Via python:
+
+```python
+from yadil.web.utils import create_meta_file_from_glob
+df = create_meta_file_from_glob(input_meta_glob="*.csv")
+
+## Copy-rights etc.
+
+The test images in tests/sample-site retrieved from the internet are attributed as various `Creative Common` license, some of them have commercial use prohibited. 
+
+The [test image](https://live.staticflickr.com/2605/3721476240_bf643c709e.jpg) retrived from https://live.staticflickr.com is attributed as follow:
+
+> "Models photo shoot" by davidyuweb is licensed under CC BY-NC 2.0
+
+The [test image](https://www.pexels.com/photo/back-view-of-a-woman-in-brown-dress-3866555/) is attributed as follow:
+
+> All photos and videos on Pexels are free to use.
+> Attribution is not required. Giving credit to the photographer or Pexels is not necessary but always appreciated.
+> You can modify the photos and videos from Pexels. Be creative and edit them as you like. 
+> by [Pexels.com's license](https://www.pexels.com/license/)
+
+The [test image](https://unsplash.com/photos/6xv4A1VA1rU) is attributed as follow:
+
+> All photos can be downloaded and used for free
+> Commercial and non-commercial purposes
+> No permission needed (though attribution is appreciated!)
+> What is not permitted 👎
+> Photos cannot be sold without significant modification.
+> Compiling photos from Unsplash to replicate a similar or competing service.
+> by [Unsplash.com's license](https://unsplash.com/license)
+
+The [insightface's code](https://pypi.org/project/insightface/) is attributed as follow:
+
+> MIT License 
+
+The [insightface's models](https://pypi.org/project/insightface/), which the above code automatically downloads is governed by: 
+
+> Non commercial License
+
+For more information, refer to [insightface github page](https://github.com/deepinsight/insightface). 
