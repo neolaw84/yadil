@@ -1,5 +1,23 @@
 # yadil - Yet Another Document and Image Library
 
+## image
+
+### face
+
+Via CLI:
+
+```bash
+pip install yadil
+python -m yadil.image.face extract-all --help
+```
+
+Via python:
+
+```python
+from yadil.image.face import extract
+results, gender_ages, det_scores = extract(img, bbox_scale=1.2, correct_rotate=True, return_all=True)
+```
+
 ## web
 
 ### image_scraper
@@ -8,7 +26,7 @@ Via CLI:
 
 ```bash
 pip install yadil
-python -m yadil.web.image_scraper --help
+python -m yadil.web scrape --help
 ```
 
 Via python: 
@@ -26,6 +44,39 @@ is_main(
     meta_file="meta.csv",
 )
 ```
+
+### merge_meta_files
+
+Via CLI:
+
+```bash
+pip install yadil
+python -m yadil.web merge_meta_files --help
+```
+
+Via python:
+
+```python
+from yadil.web.utils import merge_meta_files
+df = merge_meta_files(input_meta_glob="*.csv")
+```
+
+    
+
+### create_meta_file_from_glob
+
+Via CLI:
+
+```bash
+pip install yadil
+python -m yadil.web create_meta_file_from_glob --help
+```
+
+Via python:
+
+```python
+from yadil.web.utils import create_meta_file_from_glob
+df = create_meta_file_from_glob(input_meta_glob="*.csv")
 
 ## Copy-rights etc.
 
