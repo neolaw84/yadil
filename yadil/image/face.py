@@ -197,8 +197,12 @@ def extract_all(input_glob, output_dir, input_meta=None, output_meta=None):
     else:
         df_all = None
 
+    uuid_to_url = {
+        k: v for k, v in zip (df_all.uuid, df_all.url)
+    } if df_all is not None else {}
+
     def get_url(uuid_):
-        return df_all[df_all.index == uuid_].iloc[0, 0] if any(df_all.index == uuid_) else None
+        return uuid_to_url.get(uuid_, "")
 
     def create_df(row_list):
         temp_df = pd.DataFrame(row_list)
