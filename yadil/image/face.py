@@ -2,7 +2,7 @@ import glob
 import pathlib
 import math
 import traceback as tb
-from typing import Tuple, List
+from typing import Tuple, List, Union
 
 import pandas as pd
 from tqdm.auto import tqdm
@@ -24,7 +24,7 @@ def scale_face(points, target_points):
 
 model_points = shift_to_o(model_points)
 
-app = FaceAnalysis(allowed_modules=["detection", "genderage", "landmark_3d_68"])
+app = FaceAnalysis(allowed_modules=["detection", "genderage", "landmark_3d_68"], providers=['TensorrtExecutionProvider', 'CUDAExecutionProvider', 'CPUExecutionProvider'])
 app.prepare(ctx_id=0, det_size=(640, 640))
 
 X = 0
@@ -140,6 +140,7 @@ def extract(
         size (Tuple, optional): result size (x, y). Only supports square shapes. Defaults to (256, 256).
         bbox_scale (float, optional): how tight or loose the bounding box. <1 is tight while >1 is loose. Defaults to 1.0.
         correct_rotate (bool, optional): whether to correct rotation of face w.r.t Z axis of face (not camera). Defaults to False.
+        return_all (bool, optional): whether to return all attributes
 
         It processes in this order:
             * scale bbox
@@ -152,6 +153,7 @@ def extract(
 
     # we will never support this
     assert size[X] == size[Y]
+
 
     faces = app.get(img)
 
@@ -193,6 +195,7 @@ def extract_pitch_yaw_roll(img):
 
 def extract_all(input_glob, output_dir, input_meta=None, output_meta=None):
     if input_meta:
+        print ("reading input_meta {}".format(input_meta))
         df_all = pd.read_csv(input_meta, index_col=None)
     else:
         df_all = None
@@ -259,7 +262,7 @@ def extract_all(input_glob, output_dir, input_meta=None, output_meta=None):
             f_uuid = remove_ext(fname)
             f_url = get_url(uuid_=f_uuid) if df_all is not None else ""
             img = cv2.imread(f)
-            results, gender_ages, det_scores = extract(img, bbox_scale=1.2, correct_rotate=True, return_all=True)
+            results, gender_ages, det_scores = extract(img, bbox_scale=1.2, size=(256, 256), correct_rotate=True, return_all=True)
             for i, (r, ga, ds) in enumerate(zip(results, gender_ages, det_scores)):
                 rimg = r["rimg"]
                 M = r["M"].reshape(-1)
@@ -285,7 +288,7 @@ def extract_all(input_glob, output_dir, input_meta=None, output_meta=None):
                 row_list.append(temp_dict)
             if len(row_list) >= 1024:
                 temp_df = create_df(row_list=row_list)
-                temp_df.to_csv(output_meta, header=False, index=False, mode="a+") if output_meta else print (temp_df)
+                temp_df.to_csv(output_meta, header=True, index=False, mode="a+") if output_meta else print (temp_df)
                 row_list = []
         except Exception as e:
             tb.print_tb(e.__traceback__)
